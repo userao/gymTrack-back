@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  login         String         @unique
+  password      String         @unique
+  username      String         @unique
+  email         String?        @unique
+  userGroups    UserGroup[]
+  firstFriend   FriendsList[]  @relation("FirstFriend")
+  secondFriend  FriendsList[]  @relation("SecondFriend")
+  userTrainings UserTraining[]
+}
+
+model Group {
+  id         Int          @id @default(autoincrement())
+  name       String
+  groupItems GroupItems[]
+  userGroups UserGroup[]
+}
+
+model Template {
+  id                Int                @id @default(autoincrement())
+  name              String
+  templateExercises TemplateExercise[]
+}
+
+model Training {
+  id                Int                @id @default(autoincrement())
+  date              DateTime
+  trainingExercises TrainingExercise[]
+  userTrainings     UserTraining[]
+}
+
+model TrainingExercise {
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  training   Training @relation(fields: [trainingId], references: [id])
+  trainingId Int
+
+  @@id([exerciseId, trainingId])
+}
+
+model UserTraining {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  training   Training @relation(fields: [trainingId], references: [id])
+  trainingId Int
+
+  @@id([userId, trainingId])
+}
+
+model Exercise {
+  id                   Int                   @id @default(autoincrement())
+  name                 String
+  exerciseMuscleGroups ExerciseMuscleGroup[]
+  templateExercises    TemplateExercise[]
+  trainingExercises    TrainingExercise[]
+}
+
+model MuscleGroup {
+  id                   Int                   @id @default(autoincrement())
+  name                 String
+  exerciseMuscleGroups ExerciseMuscleGroup[]
+}
+
+model ExerciseMuscleGroup {
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id])
+  exerciseId    Int
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id])
+  muscleGroupId Int
+
+  @@id([exerciseId, muscleGroupId])
+}
+
+model TemplateExercise {
+  template   Template @relation(fields: [templateId], references: [id])
+  templateId Int
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  reps       Int
+  weight     Int
+
+  @@id([templateId, exerciseId])
+}
+
+model GroupItems {
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int
+  type    Type
+  itemId  String
+
+  @@id([groupId, itemId])
+}
+
+enum Type {
+  GROUP
+  TEMPLATE
+}
+
+model UserGroup {
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  @@id([userId, groupId])
+}
+
+model FriendsList {
+  user1   User @relation("FirstFriend", fields: [user1Id], references: [id])
+  user1Id Int
+  user2   User @relation("SecondFriend", fields: [user2Id], references: [id])
+  user2Id Int
+
+  @@id([user1Id, user2Id])
+}

@@ -101,9 +101,9 @@ model GroupItems {
   group   Group  @relation(fields: [groupId], references: [id])
   groupId Int
   type    Type
-  itemId  String
+  itemId Int 
 
-  @@id([groupId, itemId])
+  @@id([groupId, itemId, type])
 }
 
 enum Type {

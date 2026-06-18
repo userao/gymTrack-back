@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { Type } from 'generated/prisma/enums';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import type { GroupDTO } from 'src/dto/group.dto';
 import { GroupsService } from 'src/services/groups.service';
 
@@ -16,12 +15,12 @@ export class GroupsController {
   async getGroup(@Param('id') id: string) {
     const group = await this.groupsService.getGroup(id);
 
-    if (!group) {
-      return group;
-    }
+    return group;
+  }
 
-    const items = await this.groupsService.getGroupItems(group.id);
-    return { group, items };
+  @Delete(":id")
+  deleteGroup(@Param('id') id: string) {
+    return this.groupsService.deleteGroup(id);
   }
 
   @Get()
@@ -29,8 +28,13 @@ export class GroupsController {
     return this.groupsService.getAllGroups(userId);
   }
 
-  @Post(':id')
-  addItemToGroup(@Param('id') id: string, @Body() item: { type: Type, id: number }) {
-    return this.groupsService.addItemToGroup(+id, item);
+  @Delete()
+  deleteAllGroups() {
+    return this.groupsService.deleteAllGroups();
   }
+
+  // @Post(':id')
+  // addItemToGroup(@Param('id') id: string, @Body() item: { type: Type, id: number }) {
+  //   return this.groupsService.addItemToGroup(+id, item);
+  // }
 }

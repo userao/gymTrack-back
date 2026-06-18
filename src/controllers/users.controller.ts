@@ -13,11 +13,7 @@ export class UsersController {
 
   @Get(":id")
   getUser(@Param("id") id: string) {
-    try {
-      return this.usersService.getUser(id);
-    } catch (err) {
-      console.log(err)
-    }
+    return this.usersService.getUser(id);
   }
 
   @Post()

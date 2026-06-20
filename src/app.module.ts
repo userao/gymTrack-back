@@ -5,9 +5,17 @@ import { ConfigModule } from '@nestjs/config';
 import { GroupsModule } from './modules/groups.module';
 import { TemplatesModule } from './modules/templates.module';
 import { PrismaService } from './services/prisma.service';
+import { MuscleGroupsModule } from './modules/muscle-groups.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, GroupsModule, TemplatesModule, ConfigModule.forRoot(), ],
+  imports: [
+    PrismaModule,
+    MuscleGroupsModule,
+    UsersModule,
+    GroupsModule,
+    TemplatesModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [],
   providers: [],
 })

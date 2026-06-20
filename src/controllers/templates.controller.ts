@@ -11,26 +11,13 @@ export class TemplatesController {
     return this.templatesService.createTemplate(templateDto)
   }
 
-  // @Get(":id")
-  // async getTemplate(@Param('id') id: string) {
-  //   // возвращаем объект {template, exercises}
-  //   const template = await this.templatesService.getTemplate(id);
-
-  //   if (!template) {
-  //     return template;
-  //   }
-
-  //   const exercises = await this.templatesService.getTemplateExercises(template.id);
-  //   return { template, exercises };
-  // }
-
   @Get()
   getAllTemplates() {
     return this.templatesService.getAllTemplates();
   }
 
-  // @Post(':id')
-  // addExerciseToTemplate(@Param('id') id: string, @Body() exerciseId: number) {
-  //   return this.templatesService.addExerciseToTemplate(id, exerciseId);
-  // }
+  @Get(":id")
+  getTemplate(@Param('id') id: string) {
+    return this.templatesService.getTemplate(id);
+  }
 }
